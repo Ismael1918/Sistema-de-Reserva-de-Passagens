@@ -1,0 +1,53 @@
+#include <iostream>
+#include <cctype> // Para usar a função tolower
+using namespace std;
+ 
+int main() {
+    char continuarReserva;
+    bool assentos[6] = {false}; // Assentos A, B, C, D, E, F
+    string tipoPassagem;
+    do {
+        cout << "Bem-vindo ao Sistema de Reservas de Passagens\n";
+        // Verificar o tipo de passagem
+        do {
+            cout << "Escolha o tipo de passagem (Econômica ou Executiva): ";
+            cin >> tipoPassagem;
+            // Transformar a entrada em minúsculas para facilitar a comparação
+            for (char &c : tipoPassagem) {
+                c = tolower(c);
+            }
+            if (tipoPassagem != "econômica" && tipoPassagem != "executiva") {
+                cout << "Tipo de passagem inválido. Por favor, escolha Econômica ou Executiva.\n";
+            }
+        } while (tipoPassagem != "econômica" && tipoPassagem != "executiva");
+        // Priorizar assentos A e F para passagem executiva
+        char assento;
+        if (tipoPassagem == "executiva") {
+            cout << "Recomendamos reservar os assentos A e F para passagem Executiva.\n";
+        }
+        // Reservar assento e fileira
+        char fileira;
+        do {
+            cout << "Escolha um assento (A, B, C, D, E, F): ";
+            cin >> assento;
+            assento = toupper(assento); // Transformar em maiúscula para facilitar a comparação
+            cout << "Escolha uma fileira (1, 2, 3, 4, 5, 6): ";
+            cin >> fileira;
+            int index = assento - 'A';
+            if (assento < 'A' || assento > 'F' || fileira < '1' || fileira > '6' || assentos[index]) {
+                cout << "Assento ou fileira inválido(a) ou já reservado(a). Por favor, escolha outro.\n";
+            } else if ((tipoPassagem == "econômica" && (assento == 'A' || assento == 'F'))) {
+                cout << "Os assentos na janela (A e F) são exclusivos para passagem Executiva.\n";
+            } else {
+                assentos[index] = true;
+                cout << "Assento " << assento << fileira << " reservado com sucesso!\n";
+            }
+        } while ((assento < 'A' || assento > 'F' || fileira < '1' || fileira > '6' || assentos[assento - 'A']));
+        // Perguntar se deseja continuar
+        cout << "Deseja fazer outra reserva? (s/n): ";
+        cin >> continuarReserva;
+        cout << "\n";
+    } while (tolower(continuarReserva) == 's');
+    cout << "Encerrando o Sistema de Reservas...\n";
+    return 0;
+}
