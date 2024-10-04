@@ -1,0 +1,98 @@
+#include <iostream>
+#include <cctype> // Para usar a função tolower
+using namespace std;
+
+int main() {
+    char continuarReserva;
+    char reserva[10][6] = {
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' '}
+    };
+
+    while (true) {
+        string tipoPassagem;
+        // Verificar o tipo de passagem
+        do {
+            cout << "Escolha o tipo de passagem (Econômica ou Executiva): ";
+            cin >> tipoPassagem;
+            // Transformar a entrada em minúsculas para facilitar a comparação
+            for (char &c : tipoPassagem) {
+                c = tolower(c);
+            }
+            if (tipoPassagem != "econômica" && tipoPassagem != "executiva") {
+                cout << "Tipo de passagem inválido. Por favor, escolha Econômica ou Executiva.\n";
+            }
+        } while (tipoPassagem != "econômica" && tipoPassagem != "executiva");
+
+        char poltrona;
+        int fileira = -1, acento = -1;
+
+        // Reservar assento e fileira
+        while (true) {
+            cout << "\nDigite a fileira (1-10): ";
+            cin >> fileira;
+
+            if (fileira < 1 || fileira > 10) {
+                cout << "Fileira inválida! Tente novamente.\n";
+                continue;
+            }
+
+            cout << "Digite a poltrona [A][B][C][D][E][F]: ";
+            cin >> poltrona;
+            poltrona = toupper(poltrona); // Transformar em maiúscula para facilitar a comparação
+
+            switch (poltrona) {
+                case 'A': acento = 0; break;
+                case 'B': acento = 1; break;
+                case 'C': acento = 2; break;
+                case 'D': acento = 3; break;
+                case 'E': acento = 4; break;
+                case 'F': acento = 5; break;
+                default:
+                    cout << "Poltrona inválida! Tente novamente.\n";
+                    continue;
+            }
+
+            // Verifica se a poltrona já está ocupada
+            if (reserva[fileira - 1][acento] == 'x') {
+                cout << "Poltrona já ocupada! Escolha outra.\n";
+            } else {
+                reserva[fileira - 1][acento] = 'x'; // Marca a poltrona como ocupada
+                cout << "Assento " << poltrona << fileira << " reservado com sucesso!\n";
+                break; // Sai do loop se a reserva for bem-sucedida
+            }
+        }
+
+        // Exibe a grade de assentos
+        cout << "\n\t\t[A] [B] [C]\t[D] [E] [F]\n";
+        for (int x = 0; x < 10; x++) {
+            cout << "\n\t" << (x < 9 ? "0" : "") << x + 1 << "\t";	
+            for (int y = 0; y < 6; y++) {
+                cout << "[" << reserva[x][y] << "] ";
+                if (y == 2) {
+                    cout << "\t";
+                }
+            }
+        }
+        cout << "\n";
+
+        // Pergunta se o usuário deseja continuar
+        cout << "Deseja fazer outra reserva? (s/n): ";
+        cin >> continuarReserva;
+        cout << "\n";
+        if (tolower(continuarReserva) != 's') {
+            break; // Encerra o loop se o usuário não quiser continuar
+        }
+    }
+    
+    cout << "Encerrando o Sistema de Reservas...\n";
+    return 0;
+}
